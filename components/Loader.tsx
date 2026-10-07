@@ -24,7 +24,8 @@ export function Loader() {
     try {
       seen = sessionStorage.getItem("booted") === "1";
     } catch {}
-    if (seen || matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const bot = /bot|crawl|spider|slurp|lighthouse|headless/i.test(navigator.userAgent);
+    if (seen || bot || matchMedia("(prefers-reduced-motion: reduce)").matches) {
       document.documentElement.removeAttribute("data-boot");
       setPhase("off");
       return;
@@ -55,6 +56,13 @@ export function Loader() {
   }, [show, step]);
 
   const done = step >= TRACE.length;
+
+  // don't hold people at the door: carry on by itself shortly after the trace finishes
+  useEffect(() => {
+    if (!show || !done) return;
+    const t = setTimeout(enter, 1600);
+    return () => clearTimeout(t);
+  }, [show, done]);
 
   // Before hydration: a plain cover, made visible pre-paint only for first-time visitors.
   if (phase === "ssr") return <div className="boot-cover fixed inset-0 z-50 bg-[#08090a]" aria-hidden />;

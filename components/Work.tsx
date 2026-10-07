@@ -51,7 +51,7 @@ function ProjectRow({ p, flip }: { p: CaseStudy; flip: boolean }) {
         <IsoStack spread={spread} accent={p.accent}>
           {layers.length
             ? layers.map((s) => (
-                <Image key={s.src} src={s.src} alt="" fill sizes="(min-width:1024px) 40vw, 90vw" className="object-cover object-top" />
+                <Image key={s.src} src={s.src} alt={`${p.name}: ${s.caption}`} fill sizes="(min-width:1024px) 40vw, 90vw" className="object-cover object-top" />
               ))
             : [0, 1, 2].map((k) => (
                 <div key={k} className="absolute inset-0 flex items-center justify-center bg-card">

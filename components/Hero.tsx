@@ -13,7 +13,7 @@ export function Hero() {
       <div className="mx-auto grid max-w-[1400px] items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
         <div className="relative z-10">
           <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
-            {profile.role} · {profile.location}
+            Agentic UX &amp; AI product designer · human–AI interaction · {profile.location}
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 14 }}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Contact } from "@/components/Contact";
 import { work } from "@/lib/content";
+import { SITE_URL, jsonLd } from "@/lib/site";
 import { Sieve } from "@lucasmarkes/hairline/react";
 
 export function generateStaticParams() {
@@ -13,7 +14,18 @@ export function generateStaticParams() {
 export async function generateMetadata(props: PageProps<"/work/[slug]">): Promise<Metadata> {
   const { slug } = await props.params;
   const p = work.find((w) => w.slug === slug);
-  return p ? { title: `${p.name} · Vishal Singh`, description: p.tagline } : {};
+  if (!p) return {};
+  const full = `${p.tagline} ${p.summary}`;
+  const description = full.length > 158 ? full.slice(0, full.lastIndexOf(" ", 155)) + "…" : full;
+  const title = `${p.name} case study`;
+  const url = `/work/${p.slug}`;
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { type: "article", url, title: `${p.name} · Vishal Singh`, description },
+    twitter: { card: "summary_large_image", title: `${p.name} · Vishal Singh`, description },
+  };
 }
 
 export default async function CaseStudyPage(props: PageProps<"/work/[slug]">) {
@@ -25,6 +37,24 @@ export default async function CaseStudyPage(props: PageProps<"/work/[slug]">) {
 
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd({
+            "@context": "https://schema.org",
+            "@type": "CreativeWork",
+            name: p.name,
+            headline: p.tagline,
+            description: p.summary,
+            url: SITE_URL + "/work/" + p.slug,
+            image: p.cover ? SITE_URL + p.cover : undefined,
+            keywords: p.stack.join(", "),
+            creativeWorkStatus: p.status,
+            author: { "@id": SITE_URL + "/#person" },
+            creator: { "@id": SITE_URL + "/#person" },
+          }),
+        }}
+      />
       {/* Header */}
       <section className="iso-grid border-b border-line px-4 pb-16 pt-32 sm:px-8">
         <div className="mx-auto max-w-5xl">
