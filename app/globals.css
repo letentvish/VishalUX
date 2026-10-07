@@ -1,26 +1,195 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #fafafa;
+  --paper-2: #f2f2f3;
+  --card: #ffffff;
+  --ink: #0a0a0a;
+  --ink-2: #3f3f46;
+  --muted: #71717a;
+  --line: #e4e4e7;
+  --dot: #e0e0e3;
+  --accent: #0a0a0a;
+  --accent-ink: #ffffff;
+  --port: #52525b;
+  --ok: #16a34a;
+  --warn: #b45309;
+  --shadow: 0 1px 2px rgba(10, 10, 10, 0.04), 0 6px 20px -10px rgba(10, 10, 10, 0.12);
+  --grid: rgba(10, 10, 10, 0.05);
+  --hairline-plate: var(--card);
+  --hairline-hi: #0a0a0a;
+  --hairline-edge: #71717a;
+  --hairline-mid: #a1a1aa;
+  --hairline-lo: #e4e4e7;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --paper: #08090a;
+  --paper-2: #121316;
+  --card: #101014;
+  --ink: #fafafa;
+  --ink-2: #d4d4d8;
+  --muted: #a1a1aa;
+  --line: #27272a;
+  --dot: #1f1f23;
+  --accent: #fafafa;
+  --accent-ink: #08090a;
+  --port: #a1a1aa;
+  --ok: #4ade80;
+  --warn: #fbbf24;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 30px -12px rgba(0, 0, 0, 0.8);
+  --grid: rgba(255, 255, 255, 0.045);
+  --hairline-plate: var(--card);
+  --hairline-hi: #fafafa;
+  --hairline-edge: #a1a1aa;
+  --hairline-mid: #52525b;
+  --hairline-lo: #27272a;
+  color-scheme: dark;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-port: var(--port);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-instrument);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--paper);
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.boot-cover {
+  display: none;
+}
+[data-boot="pending"] .boot-cover {
+  display: block;
+}
+
+.dot-grid {
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Isometric grid: two families of hairlines at ±30°, faded toward the edges */
+.iso-grid {
+  background-image:
+    repeating-linear-gradient(30deg, var(--grid) 0 1px, transparent 1px 32px),
+    repeating-linear-gradient(150deg, var(--grid) 0 1px, transparent 1px 32px);
+}
+
+/* Buttons lift off an isometric shadow on hover */
+.iso-btn {
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+  box-shadow: 0 0 0 var(--ink);
+}
+.iso-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.iso-btn:active {
+  transform: none;
+  box-shadow: 0 0 0 var(--ink);
+}
+
+/* Leans toward the cursor anywhere on the page (vars set by PointerField) */
+.lean {
+  transform: perspective(1000px) rotateX(calc(var(--my, 0) * -2.5deg)) rotateY(calc(var(--mx, 0) * 3.5deg));
+  transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Underline that draws itself */
+.draw-link {
+  background: linear-gradient(currentColor, currentColor) no-repeat 0 100% / 0 1px;
+  transition: background-size 0.3s ease;
+}
+.draw-link:hover {
+  background-size: 100% 1px;
+}
+
+.thread-node {
+  fill: var(--paper);
+  stroke: var(--muted);
+  stroke-width: 1.2;
+  transition: fill 0.3s, stroke 0.3s, r 0.3s;
+}
+.thread-node[data-on="1"] {
+  fill: var(--ink);
+  stroke: var(--ink);
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.label {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Animated "data flowing" stroke for edges */
+.edge-flow {
+  stroke-dasharray: 4 6;
+  animation: flow 1.2s linear infinite;
+}
+@keyframes flow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+.caret::after {
+  content: "▍";
+  margin-left: 2px;
+  animation: blink 1s steps(1) infinite;
+  color: var(--accent);
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lean {
+    transform: none;
+  }
+  .edge-flow,
+  .caret::after {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }
