@@ -12,6 +12,7 @@ export const profile = {
     { label: "LinkedIn", handle: "in/visualux", href: "https://www.linkedin.com/in/visualux" },
     { label: "GitHub", handle: "letentvish", href: "https://github.com/letentvish" },
     { label: "WhatsApp", handle: "+91 95114 44357", href: "https://wa.me/919511444357" },
+    { label: "Resume / CV", handle: "PDF ↗", href: "/Vishal_Singh_CV.pdf" },
   ],
   verbs: [
     "agent workflows",

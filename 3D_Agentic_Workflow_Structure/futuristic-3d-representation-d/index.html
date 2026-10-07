@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intelligence Flow Engine: 3D Pipeline Representation</title>
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --bg-panel: rgba(10, 15, 30, 0.65);
+      --border-color: rgba(0, 212, 255, 0.15);
+      --border-hover: rgba(0, 212, 255, 0.35);
+      --accent: #00d4ff;
+      --accent-glow: rgba(0, 212, 255, 0.3);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+      
+      --color-l1: #00ffcc; /* Reception: Teal */
+      --color-l2: #00aaff; /* Agent: Blue */
+      --color-l3: #9d4edd; /* Prompt: Purple */
+      --color-l4: #10b981; /* RAG: Emerald */
+      --color-l5: #f59e0b; /* Memory: Amber */
+      --color-l6: #ec4899; /* Consistency: Pink */
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      outline: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-family);
+    }
+
+    /* Layout structure */
+    .dashboard-wrapper {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Navbar */
+    .navbar {
+      height: 64px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(3, 7, 18, 0.8);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pulse-dot {
+      width: 10px;
+      height: 10px;
+      background-color: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 212, 255, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 212, 255, 0); }
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #fff;
+    }
+
+    .brand-version {
+      font-size: 11px;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .status-label {
+      color: var(--text-muted);
+    }
+
+    .status-value {
+      font-weight: 600;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .status-value.active {
+      color: #00ffcc;
+      background: rgba(0, 255, 204, 0.1);
+      border-color: rgba(0, 255, 204, 0.3);
+      box-shadow: 0 0 8px rgba(0, 255, 204, 0.2);
+    }
+
+    .status-value.processing {
+      color: #00d4ff;
+      background: rgba(0, 212, 255, 0.1);
+      border-color: rgba(0, 212, 255, 0.3);
+      box-shadow: 0 0 8px rgba(0, 212, 255, 0.2);
+      animation: statusPulse 1s infinite alternate;
+    }
+
+    @keyframes statusPulse {
+      0% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+
+    /* Grid Layout */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 340px 1fr 380px;
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Panels */
+    .panel {
+      background: var(--bg-panel);
+      backdrop-filter: blur(16px);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .control-panel {
+      border-right: 1px solid var(--border-color);
+    }
+
+    .inspector-panel {
+      border-right: none;
+      border-left: 1px solid var(--border-color);
+    }
+
+    .panel-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .panel-header h2 {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: #fff;
+    }
+
+    .panel-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 2px;
+      display: block;
+    }
+
+    .panel-content {
+      padding: 24px;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Form Styles */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Segmented Control */
+    .segmented-control {
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 3px;
+      width: 100%;
+    }
+
+    .segmented-option {
+      flex: 1;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .segmented-option input {
+      display: none;
+    }
+
+    .segmented-option span {
+      display: block;
+      padding: 8px 0;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .segmented-option input:checked + span {
+      background: rgba(0, 212, 255, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(0, 212, 255, 0.25);
+    }
+
+    /* Dropdown / Input Select */
+    select, textarea {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: var(--text-main);
+      padding: 10px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+
+    select:focus, textarea:focus {
+      border-color: var(--accent);
+      background: rgba(0, 212, 255, 0.03);
+      box-shadow: 0 0 8px rgba(0, 212, 255, 0.1);
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    /* Prompt Suggestions */
+    .prompt-suggestions {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .suggest-btn {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-size: 11px;
+      padding: 4px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .suggest-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Simulation Control Slider */
+    .slider-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    
+    .slider-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .simulation-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .simulation-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 6px var(--accent);
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    .simulation-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.3);
+    }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, #00d4ff, #0088cc);
+      color: #000;
+      box-shadow: 0 4px 15px rgba(0, 212, 255, 0.25);
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+      background: linear-gradient(135deg, #00e5ff, #0099dd);
+    }
+
+    .primary-btn:active {
+      transform: translateY(0);
+    }
+    
+    .primary-btn.running {
+      background: #111b30 !important;
+      color: var(--text-muted) !important;
+      border: 1px solid var(--border-color);
+      box-shadow: none;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .text-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .text-btn:hover {
+      color: var(--accent);
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.05);
+      width: 100%;
+    }
+
+    /* Live Output Console */
+    .console-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 220px;
+    }
+
+    .console-header {
+      padding: 10px 16px;
+      background: rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .console-header h3 {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .console-output {
+      flex: 1;
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.6;
+      overflow-y: auto;
+      color: #9cdcfe;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .console-line.system { color: #858585; }
+    .console-line.success { color: #4ec9b0; }
+    .console-line.error { color: #f44747; }
+    .console-line.info { color: #569cd6; }
+    .console-line.highlight { color: #dcdcaa; }
+
+    /* Viewport Center Panel */
+    .viewport-panel {
+      position: relative;
+      background: radial-gradient(circle at center, #050f24 0%, #01040a 100%);
+      display: flex;
+      flex-direction: column;
+    }
+
+    #root {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .canvas-overlay {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .canvas-overlay.bottom-bar {
+      display: flex;
+      gap: 16px;
+      background: rgba(5, 10, 25, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 30px;
+      padding: 8px 20px;
+      backdrop-filter: blur(8px);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .legend-color {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .legend-color.reception { background-color: var(--color-l1); box-shadow: 0 0 6px var(--color-l1); }
+    .legend-color.agent { background-color: var(--color-l2); box-shadow: 0 0 6px var(--color-l2); }
+    .legend-color.prompt { background-color: var(--color-l3); box-shadow: 0 0 6px var(--color-l3); }
+    .legend-color.rag { background-color: var(--color-l4); box-shadow: 0 0 6px var(--color-l4); }
+    .legend-color.memory { background-color: var(--color-l5); box-shadow: 0 0 6px var(--color-l5); }
+    .legend-color.consistency { background-color: var(--color-l6); box-shadow: 0 0 6px var(--color-l6); }
+
+    .canvas-controls {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 20;
+    }
+
+    .canvas-controls button {
+      background: rgba(5, 10, 25, 0.7);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .canvas-controls button:hover {
+      background: rgba(0, 212, 255, 0.1);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    
+    .canvas-controls button.active {
+      background: rgba(0, 212, 255, 0.15);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Right Panel: Inspector */
+    .layer-tabs {
+      display: flex;
+      padding: 12px 24px 0 24px;
+      gap: 4px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 0;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 4px 4px 0 0;
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .tab-btn.active {
+      color: #fff;
+    }
+    
+    .tab-btn[data-layer="0"].active { border-color: var(--color-l1); color: var(--color-l1); background: rgba(0, 255, 204, 0.05); }
+    .tab-btn[data-layer="1"].active { border-color: var(--color-l2); color: var(--color-l2); background: rgba(0, 170, 255, 0.05); }
+    .tab-btn[data-layer="2"].active { border-color: var(--color-l3); color: var(--color-l3); background: rgba(157, 78, 221, 0.05); }
+    .tab-btn[data-layer="3"].active { border-color: var(--color-l4); color: var(--color-l4); background: rgba(16, 185, 129, 0.05); }
+    .tab-btn[data-layer="4"].active { border-color: var(--color-l5); color: var(--color-l5); background: rgba(245, 158, 11, 0.05); }
+    .tab-btn[data-layer="5"].active { border-color: var(--color-l6); color: var(--color-l6); background: rgba(236, 72, 153, 0.05); }
+
+    .inspector-content {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .inspector-detail-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      height: 100%;
+    }
+
+    .layer-badge {
+      font-size: 9px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 2px 6px;
+      border-radius: 4px;
+      align-self: flex-start;
+      text-transform: uppercase;
+    }
+
+    #inspect-layer-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .file-path-tag {
+      font-size: 12px;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 12px 0;
+    }
+
+    .meta-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .meta-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .meta-val {
+      font-size: 13px;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .description-section h4 {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .description-section p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Inner Viewer tabs (Code vs Schema) */
+    .viewer-tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .viewer-tab {
+      background: none;
+      border: none;
+      padding: 8px 0;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s;
+    }
+
+    .viewer-tab:hover {
+      color: #fff;
+    }
+
+    .viewer-tab.active {
+      color: var(--accent);
+    }
+
+    .viewer-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent);
+    }
+
+    .viewer-content {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      overflow: hidden;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      display: flex;
+      position: relative;
+      min-height: 240px;
+    }
+
+    .code-view, .schema-view {
+      flex: 1;
+      padding: 16px;
+      overflow: auto;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .code-view {
+      color: #9cdcfe;
+    }
+    
+    .schema-view {
+      color: #ce9178;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Floating HTML Overlay Labels */
+    #labels-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 15;
+      overflow: hidden;
+    }
+
+    .floating-label {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      background: rgba(5, 10, 25, 0.85);
+      border: 1.5px solid var(--accent);
+      border-radius: 6px;
+      padding: 6px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 160px;
+      pointer-events: auto;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+      transition: border-color 0.2s, background-color 0.2s, transform 0.1s;
+      opacity: 0.9;
+    }
+
+    .floating-label:hover {
+      transform: translate(-50%, -50%) scale(1.05);
+      border-color: #ffffff !important;
+      background: rgba(10, 20, 45, 0.95);
+    }
+
+    .floating-label.active {
+      border-color: #ffffff !important;
+      background: rgba(12, 25, 55, 0.95);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    }
+
+    .floating-label span {
+      font-size: 11px;
+      font-weight: 750;
+      color: #ffffff;
+      white-space: nowrap;
+    }
+
+    .floating-label small {
+      font-size: 9px;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      letter-spacing: 0.2px;
+    }
+
+    /* Page Nav */
+    .page-nav {
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+      z-index: 9999;
+      display: flex; align-items: center; gap: 4px;
+      background: rgba(3, 7, 18, 0.82);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 40px; padding: 5px 8px;
+      backdrop-filter: blur(16px);
+    }
+    .page-nav a {
+      text-decoration: none; font-family: var(--font-family);
+      font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+      padding: 7px 18px; border-radius: 30px;
+      color: rgba(148,163,184,0.7);
+      transition: all 0.25s ease;
+    }
+    .page-nav a:hover { color: #fff; }
+    .page-nav a.active {
+      background: rgba(0,212,255,0.12);
+      color: #00d4ff;
+      border: 1px solid rgba(0,212,255,0.28);
+    }
+  </style>
+</head>
+<body>
+  <!-- Page Navigation -->
+  <nav class="page-nav">
+    <a href="/index.html" class="active">Intelligence Flow Engine</a>
+    <a href="/palbon.html">PALBON Suites</a>
+  </nav>
+
+  <div class="dashboard-wrapper">
+    <!-- Top Navbar -->
+    <header class="navbar">
+      <div class="brand">
+        <span class="pulse-dot"></span>
+        <span class="brand-title">INTELLIGENCE FLOW ENGINE</span>
+        <span class="brand-version">v1.2.0</span>
+      </div>
+      <div class="status-indicator">
+        <span class="status-label">Engine State:</span>
+        <span class="status-value active" id="engine-status">STANDBY</span>
+      </div>
+    </header>
+
+    <!-- Main Grid Layout -->
+    <main class="dashboard-grid">
+      <!-- Left Column: Controls & Console -->
+      <section class="panel control-panel">
+        <div class="panel-header">
+          <h2>Control Center</h2>
+          <span class="panel-subtitle">Simulation & Parameters</span>
+        </div>
+        <div class="panel-content">
+          <div class="form-group">
+            <label>Engine Mode (AI_ENGINE_MODE)</label>
+            <div class="segmented-control">
+              <label class="segmented-option">
+                <input type="radio" name="engine_mode" value="cloud" checked>
+                <span>Cloud (Gemini)</span>
+              </label>
+              <label class="segmented-option">
+                <input type="radio" name="engine_mode" value="local">
+                <span>Local (Ollama)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Prompt Template Layer</label>
+            <select id="prompt-template">
+              <option value="summary">Summary Insight (summary_prompt.py)</option>
+              <option value="sequence">Sequence/Flow (timeline_prompt.py)</option>
+              <option value="strategy" selected>Strategy/Actionable (planner_prompt.py)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Simulated User Request</label>
+            <textarea id="user-query" rows="2">Analyze system metrics and generate actionable scaling strategy.</textarea>
+            <div class="prompt-suggestions">
+              <button class="suggest-btn" data-query="Generate high-level system health and status summary.">Summary</button>
+              <button class="suggest-btn" data-query="Analyze temporal execution pipeline and next-stage logs.">Sequence</button>
+              <button class="suggest-btn" data-query="Analyze system metrics and generate actionable scaling strategy.">Strategy</button>
+            </div>
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-row">
+              <span>Simulation Speed</span>
+              <span id="speed-label">1.0x</span>
+            </div>
+            <input type="range" id="sim-speed" class="simulation-slider" min="0.2" max="3" step="0.2" value="1.0">
+          </div>
+
+          <button id="run-simulation" class="btn primary-btn">
+            <span class="btn-icon">⚡</span> Run Pipeline Simulation
+          </button>
+
+          <div class="divider"></div>
+
+          <div class="console-wrapper">
+            <div class="console-header">
+              <h3>Live Execution Console</h3>
+              <button id="clear-console" class="text-btn">Clear</button>
+            </div>
+            <div class="console-output" id="console-logs">
+              <div class="console-line system">[SYSTEM] Engine initialized. Standing by for request.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Center Column: 3D Visualization -->
+      <section class="viewport-panel">
+        <div id="root"></div> <!-- Three.js will attach canvas here -->
+        <div id="labels-container"></div> <!-- 2D Projected labels will mount here -->
+        
+        <div class="canvas-overlay bottom-bar">
+          <div class="legend-item"><span class="legend-color reception"></span> Reception</div>
+          <div class="legend-item"><span class="legend-color agent"></span> Agent</div>
+          <div class="legend-item"><span class="legend-color prompt"></span> Prompt</div>
+          <div class="legend-item"><span class="legend-color rag"></span> RAG</div>
+          <div class="legend-item"><span class="legend-color memory"></span> Memory</div>
+          <div class="legend-item"><span class="legend-color consistency"></span> Consistency</div>
+        </div>
+        
+        <div class="canvas-controls">
+          <button id="reset-cam-btn" title="Reset View">🔄 Reset Camera</button>
+          <button id="auto-rotate-btn" class="active" title="Auto Rotate">🔄 Auto-Rotate: ON</button>
+        </div>
+      </section>
+
+      <!-- Right Column: Inspector -->
+      <section class="panel inspector-panel">
+        <div class="panel-header">
+          <h2>Layer Inspector</h2>
+          <span class="panel-subtitle">Architectural Details & Context</span>
+        </div>
+        
+        <!-- Layer Selection Tabs -->
+        <div class="layer-tabs" id="layer-tabs">
+          <button class="tab-btn active" data-layer="0">L1</button>
+          <button class="tab-btn" data-layer="1">L2</button>
+          <button class="tab-btn" data-layer="2">L3</button>
+          <button class="tab-btn" data-layer="3">L4</button>
+          <button class="tab-btn" data-layer="4">L5</button>
+          <button class="tab-btn" data-layer="5">L6</button>
+        </div>
+
+        <div class="panel-content inspector-content">
+          <div class="inspector-detail-card">
+            <div class="layer-badge" id="inspect-layer-badge">LAYER 1</div>
+            <h3 id="inspect-layer-name">The Reception Layer</h3>
+            <div class="file-path-tag">📁 File: <span id="inspect-layer-file">main.py</span></div>
+            
+            <div class="meta-row">
+              <div class="meta-col">
+                <span class="meta-label">Role</span>
+                <span class="meta-val" id="inspect-layer-role">The Entry Point (API)</span>
+              </div>
+              <div class="meta-col">
+                <span class="meta-label">Analogy</span>
+                <span class="meta-val" id="inspect-layer-analogy">The "Inbox" of the brain</span>
+              </div>
+            </div>
+
+            <div class="description-section">
+              <h4>Mechanism</h4>
+              <p id="inspect-layer-desc">Receives external requests via high-speed FastAPI endpoints. Handles schemas validation, API routing, and starts the processing pipeline synchronously or asynchronously.</p>
+            </div>
+
+            <!-- Code / Schema Viewer tabs -->
+            <div class="viewer-tabs" id="viewer-tabs">
+              <button class="viewer-tab active" data-view="code">Python Implementation</button>
+              <button class="viewer-tab" data-view="schema">JSON Schema / Output</button>
+            </div>
+            
+            <div class="viewer-content">
+              <pre class="code-view" id="inspect-code-block"><code class="language-python"># main.py API endpoint code</code></pre>
+              <pre class="schema-view hidden" id="inspect-schema-block"><code class="language-json">{ "schema": "JSON output template" }</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="/index.js"></script>
+</body>
+</html>
