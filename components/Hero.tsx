@@ -24,8 +24,9 @@ export function Hero() {
             I weave <span className="font-serif font-normal italic tracking-normal">loose ideas</span> into systems people can trust.
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }} className="mt-6 max-w-xl text-lg leading-relaxed text-ink-2">
-            Maths (Hons) graduate, self-taught designer. 3+ years in UX, the last one designing agentic AI. I build the frameworks,
-            workflows and interfaces behind AI products, then ship them in code.
+            Maths (Hons) graduate, self-taught designer, 3+ years in UX and the last one in agentic AI. I design the human side of
+            AI: what people put in, what they get back, and the flow between, so anyone can use AI&apos;s power without touching the
+            machinery.
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }} className="mt-8 flex flex-wrap items-center gap-3">
             <a href="#formula" className="iso-btn rounded-lg border border-ink bg-ink px-4 py-2.5 text-sm font-medium text-paper">
