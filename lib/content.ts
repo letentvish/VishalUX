@@ -22,7 +22,7 @@ export const profile = {
     "process flows",
   ],
   facts: [
-    { k: "UI/UX", v: "3+ yrs" },
+    { k: "UI/UX", v: "4+ yrs" },
     { k: "Agentic AI", v: "1+ yr" },
     { k: "Degree", v: "Maths (Hons)" },
   ],
@@ -422,7 +422,7 @@ export const translations = [
 export const story = [
   "Maths (Hons) graduate.",
   "Self-taught designer.",
-  "3+ years of UI/UX, the last one deep in agentic AI.",
+  "4+ years of UI/UX, the last one deep in agentic AI.",
   "I led product design on ERP and HRMS platforms, where the hard part is never the screen. It's who approves what, and what happens next.",
   "Maths taught me to find the variables hiding in a vague question.",
   "Design taught me to make the answer usable.",

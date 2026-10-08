@@ -9,7 +9,7 @@ export const docs: Doc[] = [
     id: "about",
     title: "About Vishal",
     keywords: ["who", "about", "vishal", "background", "intro", "yourself", "story"],
-    text: `${profile.name} is an ${profile.role} based in ${profile.location}. He has 3+ years in UI/UX and has spent the last year designing agentic AI products and AI workflows. He's a self-taught designer with a Maths (Hons) degree, and he builds what he designs in React and Next.js.`,
+    text: `${profile.name} is an ${profile.role} based in ${profile.location}. He has 4+ years in UI/UX and has spent the last year designing agentic AI products and AI workflows. He's a self-taught designer with a Maths (Hons) degree, and he builds what he designs in React and Next.js.`,
   },
   {
     id: "maths",
