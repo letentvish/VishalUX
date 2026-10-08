@@ -18,6 +18,8 @@
   --warn: #b45309;
   --shadow: 0 1px 2px rgba(10, 10, 10, 0.04), 0 6px 20px -10px rgba(10, 10, 10, 0.12);
   --grid: rgba(10, 10, 10, 0.05);
+  --scroll-thumb: rgba(10, 10, 10, 0.22);
+  --scroll-thumb-hover: rgba(10, 10, 10, 0.45);
   --hairline-plate: var(--card);
   --hairline-hi: #0a0a0a;
   --hairline-edge: #71717a;
@@ -42,6 +44,8 @@
   --warn: #fbbf24;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 30px -12px rgba(0, 0, 0, 0.8);
   --grid: rgba(255, 255, 255, 0.045);
+  --scroll-thumb: rgba(255, 255, 255, 0.18);
+  --scroll-thumb-hover: rgba(255, 255, 255, 0.4);
   --hairline-plate: var(--card);
   --hairline-hi: #fafafa;
   --hairline-edge: #a1a1aa;
@@ -78,6 +82,35 @@ body {
   color: var(--ink);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbars: a thin hairline thumb on a clear track, in the page's own ink.
+   Standard properties for Chrome, Edge and Firefox; the -webkit rules cover Safari. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb) transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-thumb-hover);
+  background-clip: content-box;
+}
+::-webkit-scrollbar-button,
+::-webkit-scrollbar-corner {
+  display: none;
+  background: transparent;
 }
 
 ::selection {
