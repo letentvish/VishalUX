@@ -2,7 +2,7 @@ import { profile } from "./content";
 
 // The live URL. Set NEXT_PUBLIC_SITE_URL in Vercel once the domain is known;
 // until then the default Vercel address is assumed.
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://vishal-singh.vercel.app").replace(/\/$/, "");
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://vishalux.vercel.app").replace(/\/$/, "");
 
 export const SITE_NAME = "Vishal Singh";
 export const SITE_TITLE = "Vishal Singh · Agentic UX & AI Product Designer";

@@ -9,6 +9,7 @@
 | :--- | :--- |
 | **Product Name** | **WatchMatch** |
 | **Subtitle** | Conversational Movie & Series Discovery Agent |
+| **Live Application** | [https://watch-match-rho.vercel.app](https://watch-match-rho.vercel.app) |
 | **Role** | Product Architect, Lead UI/UX Designer & AI Systems Engineer |
 | **Platform** | Responsive Web App (Desktop, Tablet, Mobile) |
 | **Tech Stack** | React 19, TypeScript, Tailwind CSS v4, Express.js, Google Gemini GenAI SDK (`gemini-2.5-flash`), Vite |

@@ -97,6 +97,7 @@ Every flagship product engineered follows a unified, hardened **6-Layer Intellig
 
 #### 🎬 Case Study 1: [WatchMatch](file:///C:/Users/singh/Desktop/Portfolio/Case_Study_WatchMatch.md)
 * **Tagline:** Agentic Cinephile Scout & Conversational Movie Discovery Engine.
+* **Live Application:** [https://watch-match-rho.vercel.app](https://watch-match-rho.vercel.app)
 * **Problem Solved:** Streaming decision fatigue and "infinite scroll paralysis" where users spend 24 minutes browsing catalogs without deciding.
 * **Core Innovation:**
   - Conversational natural language query parsing without rigid genre dropdowns.
