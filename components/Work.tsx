@@ -94,7 +94,7 @@ function ProjectRow({ p, flip }: { p: CaseStudy; flip: boolean }) {
           </Link>
           {p.live && (
             <a href={p.live} target="_blank" rel="noreferrer" className="draw-link text-sm text-ink-2">
-              Live prototype ↗
+              {p.liveLabel ?? "Live app"} ↗
             </a>
           )}
           <span className="font-mono text-[11px] text-muted">{p.kind}</span>

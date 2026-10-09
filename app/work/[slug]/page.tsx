@@ -74,7 +74,7 @@ export default async function CaseStudyPage(props: PageProps<"/work/[slug]">) {
           </dl>
           {p.live && (
             <a href={p.live} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 rounded-xl bg-ink px-4 py-2 text-sm font-medium text-paper">
-              Open the live prototype ↗
+              Open {p.liveLabel ? p.liveLabel.toLowerCase() : "live app"} ↗
             </a>
           )}
         </div>

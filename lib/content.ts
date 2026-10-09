@@ -42,6 +42,7 @@ export type CaseStudy = {
   accent: string;
   cover?: string;
   live?: string;
+  liveLabel?: string;
   summary: string;
   problem: string[];
   vague: { question: string; formula: string[]; note: string };
@@ -217,8 +218,9 @@ export const work: CaseStudy[] = [
     name: "WatchMatch",
     tagline: "A movie scout that tells you why a pick might be wrong for you.",
     kind: "Own product · shipped",
-    status: "Live prototype",
+    status: "Live app",
     live: "https://watch-match-rho.vercel.app/",
+    liveLabel: "Live app",
     role: "Product design, AI flow, front-end",
     stack: ["React 19", "TypeScript", "Tailwind 4", "Express", "Gemini structured output"],
     accent: "#e5484d",
@@ -300,6 +302,7 @@ export const work: CaseStudy[] = [
     accent: "#16a34a",
     cover: "/work/shaktivibe/home.png",
     live: "https://shaktivibe.netlify.app/dashboard",
+    liveLabel: "Live prototype",
     summary:
       "Wearables are data-rich and insight-poor. ShaktiVibe combines sleep, energy and mood check-ins with an Ayurvedic lens, and instead of another dashboard it gives you a few small rituals that fit the time of day.",
     problem: [
