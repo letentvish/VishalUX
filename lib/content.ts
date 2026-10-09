@@ -43,6 +43,7 @@ export type CaseStudy = {
   cover?: string;
   live?: string;
   liveLabel?: string;
+  liveNote?: string;
   summary: string;
   problem: string[];
   vague: { question: string; formula: string[]; note: string };
@@ -216,36 +217,42 @@ export const work: CaseStudy[] = [
     slug: "watchmatch",
     index: "03",
     name: "WatchMatch",
-    tagline: "A movie scout that tells you why a pick might be wrong for you.",
+    tagline: "A movie scout that tells you why a pick might be wrong for you. Bring your own Gemini API key for full AI agentic features.",
     kind: "Own product · shipped",
     status: "Live app",
     live: "https://watch-match-rho.vercel.app/",
     liveLabel: "Live app",
+    liveNote: "Bring your own API key for AI agentic features",
     role: "Product design, AI flow, front-end",
-    stack: ["React 19", "TypeScript", "Tailwind 4", "Express", "Gemini structured output"],
+    stack: ["React 19", "TypeScript", "Tailwind 4", "Express", "Gemini structured output", "BYOK AI"],
     accent: "#e5484d",
     cover: "/work/watchmatch/results-screen.jpg",
     summary:
-      "People with four streaming apps still spend the evening scrolling. WatchMatch replaces the catalogue with a conversation, and shows a short list where every pick explains its fit and its risk.",
+      "People with four streaming apps still spend the evening scrolling. WatchMatch replaces the catalogue with a conversational AI scout where every pick explains its fit and its risk. You can bring your own Google Gemini API key to activate full agentic scouting and mood extraction directly in your browser with zero subscription or telemetry lock-in.",
     problem: [
       "Genre filters break on real requests like “a rainy-night neon-noir mystery, grounded, under two hours, no gore”.",
       "Platform rails push their own originals. “Because you watched X” explains nothing.",
+      "Most AI wrappers hide behind paywalls and collect private prompt data instead of letting users bring their own API keys.",
       "The real dealbreakers (slow pacing, a cancelled show with no ending) are hidden until you're two hours in.",
     ],
     vague: {
       question: "“Something like Blade Runner 2049, but lighter?”",
       formula: [
-        "mood = (darkness, pace, complexity, emotional depth), each 0–100",
-        "match = closeness of a title's mood to the request − dealbreaker penalties",
-        "→ every penalty is shown to the user as a “possible mismatch”",
+        "scout = f(free text vibe, commitment cap, taste persona, BYOK Gemini agent)",
+        "→ match score + why it fits + possible mismatch warning",
+        "→ top 3 shortlist",
       ],
       note: "A vibe, turned into four axes the model can extract and the interface can display as sliders.",
     },
-    flow: ["Free-text request", "Mood + constraint extraction", "Candidate scoring", "Mismatch check", "Shortlist of 3"],
+    flow: ["Free-text request", "BYOK Gemini agent / local fallback", "Mood + constraint extraction", "Candidate scoring & mismatch check", "Shortlist of 3"],
     decisions: [
       {
         title: "Show the risk next to the recommendation",
         body: "Each pick carries a “Possible mismatch” note. Admitting a weakness is what makes the rest of the recommendation believable.",
+      },
+      {
+        title: "Bring Your Own Key (BYOK) for agentic AI",
+        body: "Users can connect their own Google Gemini API key directly to unlock full agentic mood extraction, semantic taste matching, and zero-subscription access. Keys and taste histories stay strictly in local storage.",
       },
       {
         title: "Four mood axes instead of one rating",
@@ -256,17 +263,18 @@ export const work: CaseStudy[] = [
         body: "Runtime caps, finished series only, and ending type (satisfying, bittersweet, open), because the fear is wasting an evening.",
       },
       {
-        title: "Works when the AI doesn't",
-        body: "If the model is rate-limited or offline, a local rule engine with typo correction takes over. No sign-up; taste history stays in the browser.",
+        title: "Works seamlessly even without an API key",
+        body: "If no key is configured or the model is offline, a local rule engine with typo correction takes over gracefully so the app is always functional.",
       },
     ],
     system: {
       title: "Pipeline",
       items: [
+        "Bring Your Own API Key (BYOK) client-side configuration for Gemini agentic features",
         "LLM with a strict output schema extracts mood + constraints",
-        "Local fallback parser when the API fails",
-        "Scoring and mismatch detection",
-        "Taste profile kept in local storage",
+        "Local rule-engine fallback parser when no key is set or API is offline",
+        "Scoring and mismatch detection against personal taste DNA",
+        "Taste profile and credentials kept private in browser local storage",
       ],
     },
     screens: [
@@ -276,17 +284,19 @@ export const work: CaseStudy[] = [
       { src: "/work/watchmatch/detail-modal.jpg", caption: "Concept screen · Detail: where to watch, ending type and content advisories.", wide: true },
     ],
     evidence: [
+      { label: "AI access", value: "BYOK" },
       { label: "Mood axes", value: "4" },
       { label: "Shortlist size", value: "3" },
       { label: "Sign-up walls", value: "0" },
       { label: "Fallback modes", value: "2" },
     ],
     honest:
-      "WatchMatch shipped, but no structured usability study was run, so there are no outcome numbers here. The case rests on the design decisions and the system behind them.",
+      "WatchMatch is a live, working app with BYOK Gemini support. The case rests on real production interaction design, zero-lock-in privacy, and the hybrid agentic system behind it.",
     validate: [
       "Time-to-decision vs. browsing a streaming app, same people, same evening scenario.",
       "How often a shortlisted title is actually started.",
       "Whether the mismatch note raises or lowers trust in the top pick.",
+      "Adoption rate of BYOK API key input vs. relying on local heuristic mode.",
     ],
     next: ["Bring back a lighter version as a share-a-shortlist page."],
   },

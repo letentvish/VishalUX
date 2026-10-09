@@ -75,6 +75,13 @@ function ProjectRow({ p, flip }: { p: CaseStudy; flip: boolean }) {
         <h3 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">{p.name}</h3>
         <p className="mt-3 text-xl text-ink-2">{p.tagline}</p>
 
+        {p.liveNote && (
+          <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-line bg-card px-3.5 py-1.5 text-xs text-ink-2 shadow-sm">
+            <span className="h-1.5 w-1.5 rounded-full" style={{ background: p.accent }} />
+            <span className="font-mono text-[11px] font-medium tracking-tight">{p.liveNote}</span>
+          </div>
+        )}
+
         <div className="mt-7 space-y-3 border-l border-line pl-5">
           <p className="font-serif text-[22px] italic leading-snug text-ink-2">{p.vague.question}</p>
           <p className="font-mono text-[13px] text-ink">{p.vague.formula[0]}</p>

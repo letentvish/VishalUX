@@ -9,10 +9,11 @@
 | :--- | :--- |
 | **Product Name** | **WatchMatch** |
 | **Subtitle** | Conversational Movie & Series Discovery Agent |
-| **Live Application** | [https://watch-match-rho.vercel.app](https://watch-match-rho.vercel.app) |
+| **Live Application** | [https://watch-match-rho.vercel.app](https://watch-match-rho.vercel.app) *(Bring your own Gemini API key for full AI agentic features)* |
+| **AI Access Model** | **Bring Your Own Key (BYOK)** – client-side Google Gemini API integration with local private storage & offline heuristic fallback |
 | **Role** | Product Architect, Lead UI/UX Designer & AI Systems Engineer |
 | **Platform** | Responsive Web App (Desktop, Tablet, Mobile) |
-| **Tech Stack** | React 19, TypeScript, Tailwind CSS v4, Express.js, Google Gemini GenAI SDK (`gemini-2.5-flash`), Vite |
+| **Tech Stack** | React 19, TypeScript, Tailwind CSS v4, Express.js, Google Gemini GenAI SDK (`gemini-2.5-flash`), Vite, BYOK Architecture |
 | **Design Language** | Obsidian Nocturnal Glassmorphism (`#070709` canvas, Crimson `#E50914`, Amber `#F59E0B`) |
 | **Key Metrics** | **95% reduction in decision time** (24m down to ~72s), **88% shortlist conversion**, **4.9/5.0 trust score** |
 
@@ -44,6 +45,7 @@ WatchMatch replaces tedious catalog browsing with an intelligent, conversational
 - **Radical Recommendation Transparency**: For every candidate title, the user receives an explicit **Match %**, bulleted **"Why it fits your prompt"** rationale, and a prominent **"Possible Mismatch" advisory** highlighting potential friction points.
 - **4-Axis Cinematic Mood Scales**: Moves beyond single 1–10 aggregate scores to display dynamic 0–100 sliders across **Dark / Gritty**, **Fast-Paced**, **Mind-Bending**, and **Emotional Depth**.
 - **CineTaste Passport & Evolving Persona**: Synthesizes a persistent cinephile persona archetype (e.g., *"The Cerebral Noir Minimalist"*, *"The Adrenaline Purist"*) powered by a 5-dimension Taste DNA bar and signature trope badges.
+- **Bring Your Own Key (BYOK) Sovereign AI Architecture**: Allows users to provide their own Google Gemini API key to run unrestricted conversational scouting, structured output extraction, and personalized reasoning directly in-browser. Keys remain 100% private in local client storage with zero tracking or mandatory account creation.
 - **Zero-Commitment Waste Filters**: Built-in filters for runtime caps (*under 90m*, *under 2h*), finished series status, and spoiler-safe ending classifications (*Satisfying*, *Bittersweet*, *Open-Ended*).
 
 ---
@@ -135,8 +137,9 @@ WatchMatch utilizes a resilient hybrid pipeline combining Google Gemini structur
 
 #### Engineering Innovations
 - **Strict Schema Enforcement**: Utilizes `@google/genai` type definitions (`Type.OBJECT`, `Type.ARRAY`, `Type.STRING`, `Type.NUMBER`) ensuring that LLM completions strictly follow the expected contract without markdown boilerplate or JSON formatting corruption.
-- **Double-Layered Resilience & Zero-Downtime Fallback**: If an upstream API limit occurs (HTTP 429) or internet connectivity drops, the system instantly switches to an internal TypeScript rule engine (`extractLocalFilters`) equipped with typo correction (`syfy -> sci-fi`, `korian -> korean`).
-- **Local-First Privacy**: In alignment with the Sovereign AI philosophy, all user interaction history, watchlist records, and taste passports are stored locally on the client (`localStorage`), eliminating mandatory database surveillance.
+- **Bring Your Own Key (BYOK) Client Runtime**: Eliminates costly proxy bottlenecks and privacy concerns by empowering users to supply their personal Google Gemini API key. Calls route directly using user credentials stored client-side in browser `localStorage`.
+- **Double-Layered Resilience & Zero-Downtime Fallback**: If an upstream API limit occurs (HTTP 429), internet connectivity drops, or the user chooses not to provide an API key, the system instantly switches to an internal TypeScript rule engine (`extractLocalFilters`) equipped with typo correction (`syfy -> sci-fi`, `korian -> korean`).
+- **Local-First Privacy**: In alignment with the Sovereign AI philosophy, all user interaction history, watchlist records, API credentials, and taste passports are stored locally on the client (`localStorage`), eliminating mandatory database surveillance.
 
 ---
 

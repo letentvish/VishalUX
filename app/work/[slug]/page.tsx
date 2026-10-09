@@ -73,9 +73,17 @@ export default async function CaseStudyPage(props: PageProps<"/work/[slug]">) {
             <Meta k="Stack" v={p.stack.slice(0, 4).join(", ")} />
           </dl>
           {p.live && (
-            <a href={p.live} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 rounded-xl bg-ink px-4 py-2 text-sm font-medium text-paper">
-              Open {p.liveLabel ? p.liveLabel.toLowerCase() : "live app"} ↗
-            </a>
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              <a href={p.live} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-xl bg-ink px-4 py-2 text-sm font-medium text-paper">
+                Open {p.liveLabel ? p.liveLabel.toLowerCase() : "live app"} ↗
+              </a>
+              {p.liveNote && (
+                <span className="inline-flex items-center gap-2 rounded-xl border border-line bg-card px-3.5 py-2 text-xs text-ink-2">
+                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: p.accent }} />
+                  {p.liveNote}
+                </span>
+              )}
+            </div>
           )}
         </div>
       </section>

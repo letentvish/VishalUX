@@ -97,14 +97,15 @@ Every flagship product engineered follows a unified, hardened **6-Layer Intellig
 
 #### 🎬 Case Study 1: [WatchMatch](file:///C:/Users/singh/Desktop/Portfolio/Case_Study_WatchMatch.md)
 * **Tagline:** Agentic Cinephile Scout & Conversational Movie Discovery Engine.
-* **Live Application:** [https://watch-match-rho.vercel.app](https://watch-match-rho.vercel.app)
+* **Live Application:** [https://watch-match-rho.vercel.app](https://watch-match-rho.vercel.app) *(Bring your own Gemini API key for full AI agentic features)*
 * **Problem Solved:** Streaming decision fatigue and "infinite scroll paralysis" where users spend 24 minutes browsing catalogs without deciding.
 * **Core Innovation:**
+  - **Bring Your Own Key (BYOK) Sovereign AI Architecture**: Users connect their personal Google Gemini API key to run client-side conversational scouting and structured output extraction with zero telemetry, privacy harvesting, or subscription barriers.
   - Conversational natural language query parsing without rigid genre dropdowns.
   - **Radical Recommendation Transparency**: Every suggestion includes a quantified **Match Score %**, bulleted **"Why it fits your prompt"** rationale, and an explicit **"Possible Mismatch" advisory** calling out slow pacing or graphic content.
   - **4-Axis Cinematic Mood Scales**: Interactive 0–100 sliders measuring Darkness, Pacing, Mind-Bending complexity, and Emotional Depth.
   - **CineTaste Passport**: Synthesizes a persistent cinephile archetype with 5-dimension Taste DNA bars and signature tropes.
-* **Tech Stack:** React 19, TypeScript, Tailwind CSS v4, Express.js, Google Gemini GenAI SDK (`gemini-2.5-flash`), Vite, LocalStorage persistence.
+* **Tech Stack:** React 19, TypeScript, Tailwind CSS v4, Express.js, Google Gemini GenAI SDK (`gemini-2.5-flash`), Vite, BYOK Architecture, LocalStorage persistence.
 * **Results:** **95% reduction in selection time** (from 24 mins to ~72 seconds), **88% shortlist conversion**, **4.9/5.0 trust score**.
 * 📄 *Read Full Document:* [Case_Study_WatchMatch.md](file:///C:/Users/singh/Desktop/Portfolio/Case_Study_WatchMatch.md)
 
