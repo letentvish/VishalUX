@@ -70,7 +70,7 @@ const BOARDS: Board[] = [
     title: "Enterprise workflow pattern",
     Fig: Branches,
     steps: ["Model access first: roles, scopes, permissions", "Map hand-offs between people", "Every action: validate → change state → notify → audit", "One inbox for everything waiting on you"],
-    note: "From ERP and HRMS work (details under NDA). The hard part is never the screen.",
+    note: "From enterprise-level application design and workflows (details under NDA). The hard part is never the screen.",
   },
   {
     id: "trust",

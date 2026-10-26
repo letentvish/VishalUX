@@ -394,7 +394,7 @@ export const services = [
   {
     n: "03",
     title: "Process & workflow design",
-    body: "Mapping the hand-offs between people, roles and systems before any screen is drawn. ERP and HRMS-scale: permissions, approvals, audit trails.",
+    body: "Mapping the hand-offs between people, roles and systems before any screen is drawn. Enterprise-scale workflows: permissions, approvals, audit trails.",
     tags: ["Process flows", "Access models", "Service blueprints", "Edge cases"],
   },
   {
@@ -437,7 +437,7 @@ export const story = [
   "Maths (Hons) graduate.",
   "Self-taught designer.",
   "4+ years of UI/UX, the last one deep in agentic AI.",
-  "I led product design on ERP and HRMS platforms, where the hard part is never the screen. It's who approves what, and what happens next.",
+  "I led product design for enterprise-level applications and workflows, where the hard part is never the screen. It's who approves what, and what happens next.",
   "Maths taught me to find the variables hiding in a vague question.",
   "Design taught me to make the answer usable.",
   "Code lets me ship it myself.",

@@ -24,7 +24,7 @@ export function Work() {
         <UniquelyRow />
       </div>
       <p className="mt-24 max-w-2xl border-l border-line pl-5 text-ink-2">
-        Also on the line: I led product design on ERP and HRMS platforms. Role-based access, approval chains, audit trails.
+        Also on the line: I led product design for enterprise-level applications and complex operational workflows. Role-based access, approval chains, audit trails.
         That work is under NDA, so it lives in conversation, not here.
       </p>
     </Station>

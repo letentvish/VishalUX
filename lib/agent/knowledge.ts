@@ -24,10 +24,10 @@ export const docs: Doc[] = [
     text: "Vishal designs the human side of AI. Most of an AI system runs in the backend; he designs the two ends people touch: the input (plain language, suggestions, visible privacy) and the output (the answer first, then steps and reasons). In agentic products he decides where the agent acts, where a human decides, and what the interface shows in between. His recurring patterns: deterministic maths under generative language, an auditor step before anything reaches the screen, visible reasoning and mismatch warnings, and a working fallback when the model fails.",
   },
   {
-    id: "erp",
+    id: "enterprise",
     title: "Enterprise experience",
-    keywords: ["erp", "hrms", "enterprise", "company", "job", "experience", "lead", "work history", "b2b", "saas"],
-    text: "Vishal worked as Lead Product Designer at a company building ERP and HRMS platforms: role-based access, approval chains, cross-role workflows and audit trails. That work is under NDA, so it isn't shown on the site, but he's happy to discuss his approach on a call.",
+    keywords: ["enterprise", "company", "job", "experience", "lead", "work history", "b2b", "saas", "workflows"],
+    text: "Vishal worked as Lead Product Designer for enterprise-level applications and complex operational workflows: role-based access, approval chains, cross-role workflows and audit trails. That work is under NDA, so it isn't shown on the site, but he's happy to discuss his approach on a call.",
   },
   {
     id: "process",

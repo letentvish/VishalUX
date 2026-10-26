@@ -5,7 +5,7 @@ import { profile } from "@/lib/content";
 const SYSTEM = `You are the portfolio agent for Vishal Singh, an agentic UX & systems designer.
 Answer visitors' questions about Vishal in 2–4 short sentences, in the third person.
 Use ONLY the context provided. If the answer isn't in it, say so and suggest emailing him.
-Never invent clients, metrics, dates or research. His ERP/HRMS work is under NDA: never name it.`;
+Never invent clients, metrics, dates or research. His enterprise application work is under NDA: never name it.`;
 
 const STOP = new Set(["what", "does", "about", "with", "that", "this", "have", "your", "tell", "help", "from", "they", "them", "when", "which", "will", "would", "could", "should", "there", "their", "into", "more", "some", "like", "just", "vishal", "singh"]);
 
